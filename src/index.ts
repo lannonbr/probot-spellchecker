@@ -106,90 +106,84 @@ async function processCheckSuite(context: Context): Promise<any> {
           })
         );
 
-        context.log(blob);
-
         let fileContent = await Buffer.from(
           blob.data.content,
           "base64"
         ).toString("ascii");
 
-        context.log({ fileContent });
-
         let possibleErrors = await checkSpelling(fileContent);
 
         for (let { word, suggestions, positions } of possibleErrors) {
-          context.log(word);
-          context.log(suggestions);
-          context.log(positions);
-
           let lineNumber = fileContent.slice(0, positions[0].from).split("\n")
             .length;
-
-          context.log(`this error is on line ${lineNumber}`);
 
           spellingAnnotations.push({
             path: path,
             annotation_level: "failure",
-            title: 'Mispelled word',
-            message: `The word ${word} was found on line ${lineNumber}. Did you mean ${suggestions[0]}?`,
-            start_line: lineNumber,
-            end_line: lineNumber + 1
-          })
+            title: "Mispelled word",
+            message: `The word ${word} was found on line ${lineNumber}. Did you mean ${
+              suggestions[0]
+            }?`,
+            start_line: `${lineNumber}`,
+            end_line: `${lineNumber}`
+          });
         }
-
-        // context.log(possibleErrors);
       }
     })
   );
 
-  let endDate = new Date()
+  let endDate = new Date();
 
   if (spellingAnnotations.length === 0) {
     status = "completed";
     conclusion = "success";
 
-    return context.github.checks.update(context.repo({
-      check_run_id: check.data.id,
-      name: "Spell Checker",
-      status,
-      conclusion,
-      completed_at: endDate.toISOString(),
-      output: {
-        title: 'Spellchecker passed',
-        summary: 'No spelling errors!',
-        annotations: [],
-        images: []
-      },
-      headers: {
-        accept: "application/vnd.github.antiope-preview+json"
-      }
-    }));
+    return context.github.checks.update(
+      context.repo({
+        check_run_id: check.data.id,
+        name: "Spell Checker",
+        status,
+        conclusion,
+        completed_at: endDate.toISOString(),
+        output: {
+          title: "Spellchecker passed",
+          summary: "No spelling errors!",
+          annotations: [],
+          images: []
+        },
+        headers: {
+          accept: "application/vnd.github.antiope-preview+json"
+        }
+      })
+    );
   } else {
     status = "completed";
     conclusion = "action_required";
 
-    return context.github.checks.update(context.repo({
-      check_run_id: check.data.id,
-      name: "Spell Checker",
-      status,
-      conclusion,
-      completed_at: endDate.toISOString(),
-      output: {
-        title: 'Spellchecker Failed',
-        summary: 'We found some spelling errors, please go fix them',
-        annotations: spellingAnnotations,
-        images: []
-      },
-      headers: {
-        accept: "application/vnd.github.antiope-preview+json"
-      }
-    }));
+    return context.github.checks.update(
+      context.repo({
+        check_run_id: check.data.id,
+        name: "Spell Checker",
+        status,
+        conclusion,
+        completed_at: endDate.toISOString(),
+        output: {
+          title: "Spellchecker Failed",
+          summary: "We found some spelling errors, please go fix them",
+          annotations: spellingAnnotations,
+          images: []
+        },
+        headers: {
+          accept: "application/vnd.github.antiope-preview+json"
+        }
+      })
+    );
   }
 }
 
 async function checkSpelling(fileContent: string): Promise<any> {
   return new Promise<any>((resolve, reject) => {
-    spellcheck(hunspell, fileContent, function (err: any, typos: any) {
+    spellcheck(hunspell, fileContent, function(err: any, typos: any) {
       if (err) {
         reject(err);
       }
