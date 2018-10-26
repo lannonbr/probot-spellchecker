@@ -2,6 +2,8 @@
 
 > A GitHub App built with [Probot](https://github.com/probot/probot) that runs a spellchecker against markdown files
 
+![Screenshot](screenshot.jpg)
+
 I based this on [urcomputeringpal/yamburger](https://github.com/urcomputeringpal/yamburger/) to get a handle on how to use Probot with GitHub's checks API
 
 ## Setup
