@@ -48,7 +48,7 @@ async function processCheckSuite(context: Context): Promise<any> {
         status,
         conclusion,
         started_at: startDate.toISOString(),
-        completed_at: startDate.toISOString(),
+        completed_at: (new Date()).toISOString(),
         output: {
           title: "Spell Checker",
           summary: "No PRs found, skipping...",
@@ -144,6 +144,7 @@ async function processCheckSuite(context: Context): Promise<any> {
         name: "Spell Checker",
         status,
         conclusion,
+        started_at: startDate.toISOString(),
         completed_at: endDate.toISOString(),
         output: {
           title: "Spellchecker passed",
@@ -166,6 +167,7 @@ async function processCheckSuite(context: Context): Promise<any> {
         name: "Spell Checker",
         status,
         conclusion,
+        started_at: startDate.toISOString(),
         completed_at: endDate.toISOString(),
         output: {
           title: "Spellchecker Failed",
