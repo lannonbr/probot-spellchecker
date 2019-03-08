@@ -23,7 +23,7 @@
   "dependencies": {
     "nodehun": "^2.0.12",
     "nodehun-sentences": "^2.0.1",
-    "probot": "^7.0.0"
+    "probot": "^9.0.0"
   },
   "devDependencies": {
     "@types/jest": "^23.1.5",
