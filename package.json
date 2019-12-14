@@ -21,7 +21,7 @@
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"
   },
   "dependencies": {
-    "nodehun": "^2.0.12",
+    "nodehun": "^3.0.0",
     "nodehun-sentences": "^2.0.1",
     "probot": "^7.0.0"
   },
